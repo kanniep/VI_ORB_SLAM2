@@ -21,6 +21,7 @@
 #include "Frame.h"
 #include "Converter.h"
 #include "ORBmatcher.h"
+#include "Thirdparty/darknet/src/detector.c"
 #include <thread>
 
 namespace ORB_SLAM2
@@ -488,9 +489,9 @@ void Frame::AssignFeaturesToGrid()
 
 void Frame::ExtractORB(int flag, const cv::Mat &im)
 {
-    if (flag == 0)
+    if (flag == 0) {
         (*mpORBextractorLeft)(im, cv::Mat(), mvKeys, mDescriptors);
-    else
+    } else
         (*mpORBextractorRight)(im, cv::Mat(), mvKeysRight, mDescriptorsRight);
 }
 

@@ -52,6 +52,7 @@ ${CHOLMOD_INCLUDE_DIR}
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/lib)
 
 add_library(${PROJECT_NAME} SHARED
+Thirdparty/darknet/include/darknet.h
 src/System.cc
 src/Tracking.cc
 src/LocalMapping.cc
@@ -91,6 +92,7 @@ src/IMU/NavState.cpp
 
 src/IMU/g2otypes.h
 src/IMU/g2otypes.cpp
+Thirdparty/darknet/include/darknet.h
 )
 
 target_link_libraries(${PROJECT_NAME}
@@ -146,8 +148,16 @@ add_executable(mono_euroc_VI
 Examples/Monocular/mono_euroc_VI.cc)
 target_link_libraries(mono_euroc_VI ${PROJECT_NAME})
 
+file(GLOB darknet_headers "Thirdparty/darknet/src/*.h")
+list(APPEND headers
+        Thirdparty/darknet/include/darknet.h
+        Thirdparty/darknet/include/yolo_v2_class.hpp
+)
 add_executable(mono_coconut_VI
-        Examples/Monocular/mono_coconut_VI.cc)
+        Examples/Monocular/mono_coconut_VI.cc
+        ${headers}
+        Thirdparty/darknet/src/detector.c
+        Thirdparty/darknet/src/detector.h)
 target_link_libraries(mono_coconut_VI ${PROJECT_NAME})
 
 ## Build tools
