@@ -28,7 +28,7 @@ endif()
 
 LIST(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake_modules)
 
-find_package(OpenCV 3.0 QUIET)
+find_package(OpenCV 4.0.1 QUIET)
 if(NOT OpenCV_FOUND)
    find_package(OpenCV 2.4.3 QUIET)
    if(NOT OpenCV_FOUND)
@@ -37,7 +37,7 @@ if(NOT OpenCV_FOUND)
 endif()
 
 find_package(Eigen3 3.1.0 REQUIRED)
-find_package(Pangolin REQUIRED)
+#find_package(Pangolin REQUIRED)
 find_package(Cholmod REQUIRED)
 
 include_directories(
@@ -144,6 +144,10 @@ target_link_libraries(mono_euroc ${PROJECT_NAME})
 add_executable(mono_euroc_VI
 Examples/Monocular/mono_euroc_VI.cc)
 target_link_libraries(mono_euroc_VI ${PROJECT_NAME})
+
+add_executable(mono_coconut_VI
+        Examples/Monocular/mono_coconut_VI.cc)
+target_link_libraries(mono_coconut_VI ${PROJECT_NAME})
 
 ## Build tools
 #set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/Vocabulary)

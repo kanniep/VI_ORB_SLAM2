@@ -496,16 +496,16 @@ cv::Mat Tracking::GrabImageMonoVI(const cv::Mat &im, const std::vector<IMUData> 
     if (mImGray.channels() == 3)
     {
         if (mbRGB)
-            cvtColor(mImGray, mImGray, CV_RGB2GRAY);
+            cvtColor(mImGray, mImGray, cv::COLOR_RGB2GRAY);
         else
-            cvtColor(mImGray, mImGray, CV_BGR2GRAY);
+            cvtColor(mImGray, mImGray, cv::COLOR_BGRA2GRAY);
     }
     else if (mImGray.channels() == 4)
     {
         if (mbRGB)
-            cvtColor(mImGray, mImGray, CV_RGBA2GRAY);
+            cvtColor(mImGray, mImGray, cv::COLOR_RGB2GRAY);
         else
-            cvtColor(mImGray, mImGray, CV_BGRA2GRAY);
+            cvtColor(mImGray, mImGray, cv::COLOR_BGRA2GRAY);
     }
 
     if (mState == NOT_INITIALIZED || mState == NO_IMAGES_YET)
@@ -529,26 +529,26 @@ cv::Mat Tracking::GrabImageStereoVI(const cv::Mat &imRectLeft, const cv::Mat &im
     {
         if (mbRGB)
         {
-            cvtColor(mImGray, mImGray, CV_RGB2GRAY);
-            cvtColor(imGrayRight, imGrayRight, CV_RGB2GRAY);
+            cvtColor(mImGray, mImGray, cv::COLOR_RGB2GRAY);
+            cvtColor(imGrayRight, imGrayRight, cv::COLOR_RGB2GRAY);
         }
         else
         {
-            cvtColor(mImGray, mImGray, CV_BGR2GRAY);
-            cvtColor(imGrayRight, imGrayRight, CV_BGR2GRAY);
+            cvtColor(mImGray, mImGray, cv::COLOR_BGR2GRAY);
+            cvtColor(imGrayRight, imGrayRight, cv::COLOR_BGR2GRAY);
         }
     }
     else if (mImGray.channels() == 4)
     {
         if (mbRGB)
         {
-            cvtColor(mImGray, mImGray, CV_RGBA2GRAY);
-            cvtColor(imGrayRight, imGrayRight, CV_RGBA2GRAY);
+            cvtColor(mImGray, mImGray, cv::COLOR_RGBA2GRAY);
+            cvtColor(imGrayRight, imGrayRight, cv::COLOR_RGBA2GRAY);
         }
         else
         {
-            cvtColor(mImGray, mImGray, CV_BGRA2GRAY);
-            cvtColor(imGrayRight, imGrayRight, CV_BGRA2GRAY);
+            cvtColor(mImGray, mImGray, cv::COLOR_BGRA2GRAY);
+            cvtColor(imGrayRight, imGrayRight, cv::COLOR_BGRA2GRAY);
         }
     }
 
