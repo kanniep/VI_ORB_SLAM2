@@ -32,8 +32,11 @@ bool Frame::mbInitialComputations = true;
 float Frame::cx, Frame::cy, Frame::fx, Frame::fy, Frame::invfx, Frame::invfy;
 float Frame::mnMinX, Frame::mnMinY, Frame::mnMaxX, Frame::mnMaxY;
 float Frame::mfGridElementWidthInv, Frame::mfGridElementHeightInv;
-
-
+char *cfgfile = "cfg/palm-tiny.cfg";
+char *datacfg = "cfg/palm.data";
+char *weightfile = "cfg/palm-tiny_13300.weights";
+//network Frame::yolo_net = parse_network_cfg_custom(cfgfile, 1, 1); // set batch=11
+network *Frame::yolo_net = load_network(cfgfile, weightfile, 0);
 
 //-------------------------------------------------------------------------------------------
 //-------------------------------------------------------------------------------------------
@@ -141,33 +144,54 @@ void Frame::SetNavState(const NavState& ns)
     mNavState = ns;
 }
 
-void Frame::RemoveNonCoco(network &yolo_net, const cv::Mat &imGray)
+void Frame::RemoveNonCoco(const cv::Mat &imGray)
 {
     srand(2222222);
-    float nms = .45;    // 0.4F
-	image im = mat_to_image_const(imGray);
-	image sized = resize_image(im, yolo_net.w, yolo_net.h);
-	int letterbox = 0;
-	layer l = yolo_net.layers[yolo_net.n - 1];
 
-	float *X = sized.data;
+    float nms = .45;    // 0.4F
+	cv::Mat imNew;
+	cvtColor(imGray, imNew, cv::COLOR_GRAY2BGR);
+	image im = mat_to_image_const(imNew);
+	//cv::imwrite("tmp.png", imGray);
+	//image im = load_image("tmp.png", yolo_net->w, yolo_net->h, 0);
+	int letterbox = 0;
+	layer l = yolo_net->layers[yolo_net->n - 1];
+
+	float *X = im.data;
 
 	double time = get_time_point();
-        cout << "Start Prediction " << imGray.channels() << endl;
-	network_predict(yolo_net, X);
+	network_predict_image(yolo_net, im);
 	printf("Predicted in %lf milli-seconds.\n", ((double)get_time_point() - time) / 1000);
 
 	int nboxes = 0;
-	detection *dets = get_network_boxes(&yolo_net, im.w, im.h, 0.8, 0.8, 0, 1, &nboxes, letterbox);
+	detection *dets = get_network_boxes(yolo_net, im.w, im.h, 0.95, 0.95, 0, 1, &nboxes, letterbox);
 	if (nms) do_nms_sort(dets, nboxes, l.classes, nms);
 	free_image(im);
-	free_image(sized);
+	vector<bool> goodKeyIndex;
+	for (int i=0; i<N; i++) goodKeyIndex.push_back(false);
+	for (int i=0; i<nboxes; i++){
+		box curBox = dets[i].bbox;
+		float minX = curBox.x - (curBox.w/2);
+		float minY = curBox.y - (curBox.h/2);
+		float maxX = curBox.x + (curBox.w/2);
+		float maxY = curBox.y + (curBox.h/2);
+		for (int j=N-1; j>=0; j--) {
+			cv::KeyPoint curKey = mvKeys[j];
+			if ((curKey.pt.x >= minX || curKey.pt.x <= maxX) &&
+			(curKey.pt.y >= minY || curKey.pt.y <= maxY)) goodKeyIndex[j] = true;
+		}
+	}
+	//for (int i=N-1; i>=0; i--) {
+	//	if (!goodKeyIndex[i]) mvKeys.erase(mvKeys.begin()+i);
+	//}
+	cout << N << " " << mvKeys.size() << endl;
+	//N = mvKeys.size();
 }
 
 
 //for monocular orbvio
 Frame::Frame(const cv::Mat &imGray, const double &timeStamp, const std::vector<IMUData> &vimu, ORBextractor* extractor, ORBVocabulary* voc,
-             cv::Mat &K, cv::Mat &distCoef, const float &bf, const float &thDepth, network &yolo_net, KeyFrame* pLastKF)
+             cv::Mat &K, cv::Mat &distCoef, const float &bf, const float &thDepth, KeyFrame* pLastKF)
     : mpORBvocabulary(voc), mpORBextractorLeft(extractor), mpORBextractorRight(static_cast<ORBextractor*>(NULL)),
       mTimeStamp(timeStamp), mK(K.clone()), mDistCoef(distCoef.clone()), mbf(bf), mThDepth(thDepth)
 {
@@ -188,7 +212,7 @@ Frame::Frame(const cv::Mat &imGray, const double &timeStamp, const std::vector<I
 
     // ORB extraction
     ExtractORB(0, imGray);
-    RemoveNonCoco(yolo_net, imGray);
+    if (pLastKF != NULL) RemoveNonCoco(imGray);
 
     N = mvKeys.size();
 

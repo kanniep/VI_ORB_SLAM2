@@ -51,6 +51,8 @@
 #include <functional>
 #include <atomic>
 
+#include "Thirdparty/darknet/src/darknet.h"
+
 using namespace std;
 
 /*class ImageGrabber
@@ -193,6 +195,7 @@ int main(int argc, char **argv)
 {
     //ros::init(argc, argv, "Mono");
     //ros::start();
+    cuda_set_device(0);
 
     if (argc != 7)
     {

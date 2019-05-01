@@ -260,7 +260,6 @@ protected:
     bool mbRGB;
 
     list<MapPoint*> mlpTemporalPoints;
-    network yolo_net;
 };
 
 } //namespace ORB_SLAM

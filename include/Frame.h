@@ -37,14 +37,6 @@
 #include <IMU/IMUPreintegrator.h>
 
 #include "Thirdparty/darknet/include/darknet.h"
-#include "Thirdparty/darknet/src/network.h"
-#include "Thirdparty/darknet/src/region_layer.h"
-#include "Thirdparty/darknet/src/cost_layer.h"
-#include "Thirdparty/darknet/src/utils.h"
-#include "Thirdparty/darknet/src/parser.h"
-#include "Thirdparty/darknet/src/box.h"
-#include "Thirdparty/darknet/src/option_list.h"
-#include "Thirdparty/darknet/src/image_opencv.h"
 
 #ifndef __COMPAR_FN_T
 #define __COMPAR_FN_T
@@ -69,7 +61,7 @@ public:
 
     // Constructor for Monocular orbvio
     Frame(const cv::Mat &imGray, const double &timeStamp, const std::vector<IMUData> &vimu, ORBextractor* extractor,ORBVocabulary* voc,
-          cv::Mat &K, cv::Mat &distCoef, const float &bf, const float &thDepth, network &yolo_net, KeyFrame* pLastKF=NULL);
+          cv::Mat &K, cv::Mat &distCoef, const float &bf, const float &thDepth, KeyFrame* pLastKF=NULL);
     // Constructor for stereo orbvio
     Frame(const cv::Mat &imLeft, const cv::Mat &imRight, const double &timeStamp, const std::vector<IMUData> &vimu, ORBextractor* extractorLeft, ORBextractor* extractorRight, ORBVocabulary* voc,
           cv::Mat &K, cv::Mat &distCoef, const float &bf, const float &thDepth,KeyFrame *pLastKF=NULL);
@@ -89,6 +81,7 @@ public:
     // For pose optimization, use as prior and prior information(inverse covariance)
     Matrix<double,15,15> mMargCovInv;
     NavState mNavStatePrior;
+    static network * yolo_net;
 
 protected:
     NavState mNavState;
@@ -252,7 +245,7 @@ private:
     void AssignFeaturesToGrid();
 
     // YOLOv3
-    void RemoveNonCoco(network &yolo_net, const cv::Mat &imGray);
+    void RemoveNonCoco(const cv::Mat &imGray);
 
     // Rotation, translation and camera center
     cv::Mat mRcw;
