@@ -5,7 +5,7 @@
 
 dlist *make_list()
 {
-    dlist* l = (dlist*)malloc(sizeof(list));
+    dlist* l = (dlist*)malloc(sizeof(dlist));
     l->size = 0;
     l->front = 0;
     l->back = 0;
