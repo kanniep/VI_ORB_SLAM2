@@ -38,8 +38,8 @@ metadata get_metadata(char *file)
     metadata m = { 0 };
     dlist *options = read_data_cfg(file);
 
-    char *name_dlist = option_find_str(options, "names", 0);
-    if (!name_list) name_dlist = option_find_str(options, "labels", 0);
+    char *name_list = option_find_str(options, "names", 0);
+    if (!name_list) name_list = option_find_str(options, "labels", 0);
     if (!name_list) {
         fprintf(stderr, "No names or labels found\n");
     }
