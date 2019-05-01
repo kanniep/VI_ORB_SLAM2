@@ -5,13 +5,13 @@
 #include "utils.h"
 #include "data.h"
 
-list *read_data_cfg(char *filename)
+dlist *read_data_cfg(char *filename)
 {
     FILE *file = fopen(filename, "r");
     if(file == 0) file_error(filename);
     char *line;
     int nu = 0;
-    list *options = make_list();
+    dlist *options = make_list();
     while((line=fgetl(file)) != 0){
         ++nu;
         strip(line);
@@ -36,10 +36,10 @@ list *read_data_cfg(char *filename)
 metadata get_metadata(char *file)
 {
     metadata m = { 0 };
-    list *options = read_data_cfg(file);
+    dlist *options = read_data_cfg(file);
 
-    char *name_list = option_find_str(options, "names", 0);
-    if (!name_list) name_list = option_find_str(options, "labels", 0);
+    char *name_dlist = option_find_str(options, "names", 0);
+    if (!name_list) name_dlist = option_find_str(options, "labels", 0);
     if (!name_list) {
         fprintf(stderr, "No names or labels found\n");
     }
@@ -52,7 +52,7 @@ metadata get_metadata(char *file)
     return m;
 }
 
-int read_option(char *s, list *options)
+int read_option(char *s, dlist *options)
 {
     size_t i;
     size_t len = strlen(s);
@@ -70,7 +70,7 @@ int read_option(char *s, list *options)
     return 1;
 }
 
-void option_insert(list *l, char *key, char *val)
+void option_insert(dlist *l, char *key, char *val)
 {
     kvp* p = (kvp*)malloc(sizeof(kvp));
     p->key = key;
@@ -79,7 +79,7 @@ void option_insert(list *l, char *key, char *val)
     list_insert(l, p);
 }
 
-void option_unused(list *l)
+void option_unused(dlist *l)
 {
     node *n = l->front;
     while(n){
@@ -91,7 +91,7 @@ void option_unused(list *l)
     }
 }
 
-char *option_find(list *l, char *key)
+char *option_find(dlist *l, char *key)
 {
     node *n = l->front;
     while(n){
@@ -104,7 +104,7 @@ char *option_find(list *l, char *key)
     }
     return 0;
 }
-char *option_find_str(list *l, char *key, char *def)
+char *option_find_str(dlist *l, char *key, char *def)
 {
     char *v = option_find(l, key);
     if(v) return v;
@@ -112,7 +112,7 @@ char *option_find_str(list *l, char *key, char *def)
     return def;
 }
 
-int option_find_int(list *l, char *key, int def)
+int option_find_int(dlist *l, char *key, int def)
 {
     char *v = option_find(l, key);
     if(v) return atoi(v);
@@ -120,21 +120,21 @@ int option_find_int(list *l, char *key, int def)
     return def;
 }
 
-int option_find_int_quiet(list *l, char *key, int def)
+int option_find_int_quiet(dlist *l, char *key, int def)
 {
     char *v = option_find(l, key);
     if(v) return atoi(v);
     return def;
 }
 
-float option_find_float_quiet(list *l, char *key, float def)
+float option_find_float_quiet(dlist *l, char *key, float def)
 {
     char *v = option_find(l, key);
     if(v) return atof(v);
     return def;
 }
 
-float option_find_float(list *l, char *key, float def)
+float option_find_float(dlist *l, char *key, float def)
 {
     char *v = option_find(l, key);
     if(v) return atof(v);
