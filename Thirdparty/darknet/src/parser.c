@@ -38,10 +38,10 @@
 
 typedef struct{
     char *type;
-    list *options;
+    dlist *options;
 }section;
 
-list *read_cfg(char *filename);
+dlist *read_cfg(char *filename);
 
 LAYER_TYPE string_to_layer_type(char * type)
 {
@@ -124,7 +124,7 @@ typedef struct size_params{
     network net;
 } size_params;
 
-local_layer parse_local(list *options, size_params params)
+local_layer parse_local(dlist *options, size_params params)
 {
     int n = option_find_int(options, "filters",1);
     int size = option_find_int(options, "size",1);
