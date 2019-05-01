@@ -423,7 +423,7 @@ cost_layer parse_cost(dlist *options, size_params params)
     return layer;
 }
 
-crop_layer parse_crop(list *options, size_params params)
+crop_layer parse_crop(dlist *options, size_params params)
 {
     int crop_height = option_find_int(options, "crop_height",1);
     int crop_width = option_find_int(options, "crop_width",1);
