@@ -47,13 +47,11 @@ ${PROJECT_SOURCE_DIR}/src
 ${EIGEN3_INCLUDE_DIR}
 ${Pangolin_INCLUDE_DIRS}
 ${CHOLMOD_INCLUDE_DIR}
-${PROJECT_SOURCE_DIR}/Thirdparty/darknet
 )
 
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/lib)
 
 add_library(${PROJECT_NAME} SHARED
-Thirdparty/darknet/include/darknet.h
 src/System.cc
 src/Tracking.cc
 src/LocalMapping.cc
@@ -149,8 +147,7 @@ Examples/Monocular/mono_euroc_VI.cc)
 target_link_libraries(mono_euroc_VI ${PROJECT_NAME})
 
 add_executable(mono_coconut_VI
-        Examples/Monocular/mono_coconut_VI.cc
-        Thirdparty/darknet/src/detector.h)
+        Examples/Monocular/mono_coconut_VI.cc)
 target_link_libraries(mono_coconut_VI ${PROJECT_NAME})
 
 ## Build tools
