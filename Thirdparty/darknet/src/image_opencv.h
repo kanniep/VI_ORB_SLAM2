@@ -3,13 +3,13 @@
 
 #include "image.h"
 #include "matrix.h"
-
 #ifdef __cplusplus
+#include <opencv2/core/core.hpp>
 extern "C" {
+image mat_to_image_const(const cv::Mat &mat);
 #endif
 
 #ifdef OPENCV
-
 // declaration
 typedef struct mat_cv mat_cv;
 typedef struct cap_cv cap_cv;
@@ -38,7 +38,6 @@ void release_mat(mat_cv **mat);
 // cv::Mat ipl_to_mat(IplImage *ipl)
 // IplImage *mat_to_ipl(cv::Mat mat)
 // Mat image_to_mat(image img)
-// image mat_to_image(cv::Mat mat)
 image mat_to_image_cv(mat_cv *mat);
 
 // Window

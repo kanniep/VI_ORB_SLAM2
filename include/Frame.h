@@ -36,6 +36,24 @@
 #include <IMU/NavState.h>
 #include <IMU/IMUPreintegrator.h>
 
+#include "Thirdparty/darknet/include/darknet.h"
+#include "Thirdparty/darknet/src/network.h"
+#include "Thirdparty/darknet/src/region_layer.h"
+#include "Thirdparty/darknet/src/cost_layer.h"
+#include "Thirdparty/darknet/src/utils.h"
+#include "Thirdparty/darknet/src/parser.h"
+#include "Thirdparty/darknet/src/box.h"
+#include "Thirdparty/darknet/src/option_list.h"
+#include "Thirdparty/darknet/src/image_opencv.h"
+
+#ifndef __COMPAR_FN_T
+#define __COMPAR_FN_T
+typedef int (*__compar_fn_t)(const void*, const void*);
+#ifdef __USE_GNU
+typedef __compar_fn_t comparison_fn_t;
+#endif
+#endif
+
 namespace ORB_SLAM2
 {
 #define FRAME_GRID_ROWS 48
@@ -51,7 +69,7 @@ public:
 
     // Constructor for Monocular orbvio
     Frame(const cv::Mat &imGray, const double &timeStamp, const std::vector<IMUData> &vimu, ORBextractor* extractor,ORBVocabulary* voc,
-          cv::Mat &K, cv::Mat &distCoef, const float &bf, const float &thDepth, KeyFrame* pLastKF=NULL);
+          cv::Mat &K, cv::Mat &distCoef, const float &bf, const float &thDepth, network &yolo_net, KeyFrame* pLastKF=NULL);
     // Constructor for stereo orbvio
     Frame(const cv::Mat &imLeft, const cv::Mat &imRight, const double &timeStamp, const std::vector<IMUData> &vimu, ORBextractor* extractorLeft, ORBextractor* extractorRight, ORBVocabulary* voc,
           cv::Mat &K, cv::Mat &distCoef, const float &bf, const float &thDepth,KeyFrame *pLastKF=NULL);
@@ -232,6 +250,9 @@ private:
 
     // Assign keypoints to the grid for speed up feature matching (called in the constructor).
     void AssignFeaturesToGrid();
+
+    // YOLOv3
+    void RemoveNonCoco(network &yolo_net, const cv::Mat &imGray);
 
     // Rotation, translation and camera center
     cv::Mat mRcw;

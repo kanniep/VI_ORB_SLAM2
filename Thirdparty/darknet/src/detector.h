@@ -23,6 +23,4 @@ typedef __compar_fn_t comparison_fn_t;
 
 #ifndef ORB_SLAM2_DETECTOR_H
 #define ORB_SLAM2_DETECTOR_H
-void setup_detector();
-detection* detect(char *filename, float thresh, float hier_thresh);
 #endif //ORB_SLAM2_DETECTOR_H

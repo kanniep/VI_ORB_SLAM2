@@ -51,8 +51,6 @@
 #include <functional>
 #include <atomic>
 
-#include <Thirdparty/darknet/src/detector.h>
-
 using namespace std;
 
 /*class ImageGrabber
@@ -229,7 +227,6 @@ int main(int argc, char **argv)
     //cout<<"loading imu finished"<<endl;
     //loadImageList("/home/fyj/Code/C++/LearnVIORB/Examples/ROS/ORB_VIO/v2_03_diff/V2_03_difficult/mav0/cam0/data.csv",iListData);
     loadImageList(argv[4], iListData);
-    setup_detector();
     //cout<<"loading image finished"<<endl;
     //double e = pow(10.0,-9);
 //

@@ -499,6 +499,7 @@ cv::Mat Tracking::GrabImageMonoVI(const cv::Mat &im, const std::vector<IMUData> 
             cvtColor(mImGray, mImGray, cv::COLOR_RGB2GRAY);
         else
             cvtColor(mImGray, mImGray, cv::COLOR_BGRA2GRAY);
+        cout << "Convert Color" << endl;
     }
     else if (mImGray.channels() == 4)
     {
@@ -509,9 +510,9 @@ cv::Mat Tracking::GrabImageMonoVI(const cv::Mat &im, const std::vector<IMUData> 
     }
 
     if (mState == NOT_INITIALIZED || mState == NO_IMAGES_YET)
-        mCurrentFrame = Frame(mImGray, timestamp, vimu, mpIniORBextractor, mpORBVocabulary, mK, mDistCoef, mbf, mThDepth);
+        mCurrentFrame = Frame(mImGray, timestamp, vimu, mpIniORBextractor, mpORBVocabulary, mK, mDistCoef, mbf, mThDepth, yolo_net);
     else
-        mCurrentFrame = Frame(mImGray, timestamp, vimu, mpORBextractorLeft, mpORBVocabulary, mK, mDistCoef, mbf, mThDepth, mpLastKeyFrame);
+        mCurrentFrame = Frame(mImGray, timestamp, vimu, mpORBextractorLeft, mpORBVocabulary, mK, mDistCoef, mbf, mThDepth, yolo_net, mpLastKeyFrame);
 
     Track();
 
@@ -673,6 +674,19 @@ Tracking::Tracking(System *pSys, ORBVocabulary* pVoc, FrameDrawer *pFrameDrawer,
         else
             mDepthMapFactor = 1.0f / mDepthMapFactor;
     }
+    char *cfgfile = "cfg/palm.cfg";
+    char *datacfg = "cfg/palm.data";
+    char *weightfile = "cfg/palm_10000.weights";
+    dlist *options = read_data_cfg(datacfg);
+    char *name_list = option_find_str(options, "names", "data/names.list");
+    int names_size = 0;
+    char **names = get_labels_custom(name_list, &names_size); //get_labels(name_list);
+    this->yolo_net = parse_network_cfg_custom(cfgfile, 1, 1); // set batch=1
+    if (weightfile) {
+        load_weights(&yolo_net, weightfile);
+    }
+    fuse_conv_batchnorm(yolo_net);
+    calculate_binary_weights(yolo_net);
 
 }
 

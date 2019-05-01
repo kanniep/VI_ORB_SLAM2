@@ -28,7 +28,7 @@ endif()
 
 LIST(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake_modules)
 
-find_package(OpenCV 2.4.10 QUIET PATHS /usr/local/opencv2)
+find_package(OpenCV 3.4.0 QUIET)
 if(NOT OpenCV_FOUND)
    find_package(OpenCV 2.4.3 QUIET)
    if(NOT OpenCV_FOUND)
@@ -37,7 +37,7 @@ if(NOT OpenCV_FOUND)
 endif()
 
 find_package(Eigen3 3.1.0 REQUIRED)
-#find_package(Pangolin REQUIRED)
+find_package(Pangolin REQUIRED)
 find_package(Cholmod REQUIRED)
 
 include_directories(
@@ -108,43 +108,11 @@ ${LAPACK_LIBRARIES}
 
 ## Build examples
 
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/Examples/RGB-D)
-
-add_executable(rgbd_tum
-Examples/RGB-D/rgbd_tum.cc)
-target_link_libraries(rgbd_tum ${PROJECT_NAME})
-
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/Examples/Stereo)
-
-add_executable(stereo_kitti
-Examples/Stereo/stereo_kitti.cc)
-target_link_libraries(stereo_kitti ${PROJECT_NAME})
-
-add_executable(stereo_euroc
-Examples/Stereo/stereo_euroc.cc)
-target_link_libraries(stereo_euroc ${PROJECT_NAME})
-
-add_executable(stereo_euroc_VI
-Examples/Stereo/stereo_euroc_VI.cc)
-target_link_libraries(stereo_euroc_VI ${PROJECT_NAME})
-
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/Examples/Monocular)
 
-add_executable(mono_tum
-Examples/Monocular/mono_tum.cc)
-target_link_libraries(mono_tum ${PROJECT_NAME})
-
-add_executable(mono_kitti
-Examples/Monocular/mono_kitti.cc)
-target_link_libraries(mono_kitti ${PROJECT_NAME})
-
-add_executable(mono_euroc
-Examples/Monocular/mono_euroc.cc)
-target_link_libraries(mono_euroc ${PROJECT_NAME})
-
-add_executable(mono_euroc_VI
-Examples/Monocular/mono_euroc_VI.cc)
-target_link_libraries(mono_euroc_VI ${PROJECT_NAME})
+#add_executable(mono_euroc_VI
+#Examples/Monocular/mono_euroc_VI.cc)
+#target_link_libraries(mono_euroc_VI ${PROJECT_NAME})
 
 add_executable(mono_coconut_VI
         Examples/Monocular/mono_coconut_VI.cc)
