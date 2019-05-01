@@ -47,6 +47,7 @@ ${PROJECT_SOURCE_DIR}/src
 ${EIGEN3_INCLUDE_DIR}
 ${Pangolin_INCLUDE_DIRS}
 ${CHOLMOD_INCLUDE_DIR}
+${PROJECT_SOURCE_DIR}/Thirdparty/darknet
 )
 
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/lib)
@@ -92,7 +93,6 @@ src/IMU/NavState.cpp
 
 src/IMU/g2otypes.h
 src/IMU/g2otypes.cpp
-Thirdparty/darknet/include/darknet.h
 )
 
 target_link_libraries(${PROJECT_NAME}
@@ -148,15 +148,8 @@ add_executable(mono_euroc_VI
 Examples/Monocular/mono_euroc_VI.cc)
 target_link_libraries(mono_euroc_VI ${PROJECT_NAME})
 
-file(GLOB darknet_headers "Thirdparty/darknet/src/*.h")
-list(APPEND headers
-        Thirdparty/darknet/include/darknet.h
-        Thirdparty/darknet/include/yolo_v2_class.hpp
-)
 add_executable(mono_coconut_VI
         Examples/Monocular/mono_coconut_VI.cc
-        ${headers}
-        Thirdparty/darknet/src/detector.c
         Thirdparty/darknet/src/detector.h)
 target_link_libraries(mono_coconut_VI ${PROJECT_NAME})
 
