@@ -28,7 +28,7 @@ void train_swag(char *cfgfile, char *weightfile)
     int classes = l.classes;
     float jitter = l.jitter;
 
-    list *plist = get_paths(train_images);
+    dlist *plist = get_paths(train_images);
     //int N = plist->size;
     char **paths = (char **)list_to_array(plist);
 

@@ -32,7 +32,7 @@ void train_yolo(char *cfgfile, char *weightfile)
     int classes = l.classes;
     float jitter = l.jitter;
 
-    list *plist = get_paths(train_images);
+    dlist *plist = get_paths(train_images);
     //int N = plist->size;
     char **paths = (char **)list_to_array(plist);
 
@@ -203,7 +203,7 @@ void validate_yolo_recall(char *cfgfile, char *weightfile)
     srand(time(0));
 
     char *base = "results/comp4_det_test_";
-    list *plist = get_paths("data/voc.2007.test");
+    dlist *plist = get_paths("data/voc.2007.test");
     char **paths = (char **)list_to_array(plist);
 
     layer l = net.layers[net.n-1];
