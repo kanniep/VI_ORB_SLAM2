@@ -3,9 +3,9 @@
 #include "list.h"
 #include "option_list.h"
 
-list *make_list()
+dlist *make_list()
 {
-    list* l = (list*)malloc(sizeof(list));
+    dlist* l = (list*)malloc(sizeof(list));
     l->size = 0;
     l->front = 0;
     l->back = 0;
@@ -26,7 +26,7 @@ void transfer_node(list *s, list *d, node *n)
 }
 */
 
-void *list_pop(list *l){
+void *list_pop(dlist *l){
     if(!l->back) return 0;
     node *b = l->back;
     void *val = b->val;
@@ -38,7 +38,7 @@ void *list_pop(list *l){
     return val;
 }
 
-void list_insert(list *l, void *val)
+void list_insert(dlist *l, void *val)
 {
     node* newnode = (node*)malloc(sizeof(node));
     newnode->val = val;
@@ -65,13 +65,13 @@ void free_node(node *n)
     }
 }
 
-void free_list(list *l)
+void free_list(dlist *l)
 {
     free_node(l->front);
     free(l);
 }
 
-void free_list_contents(list *l)
+void free_list_contents(dlist *l)
 {
     node *n = l->front;
     while(n){
@@ -80,7 +80,7 @@ void free_list_contents(list *l)
     }
 }
 
-void free_list_contents_kvp(list *l)
+void free_list_contents_kvp(dlist *l)
 {
     node *n = l->front;
     while (n) {
@@ -91,7 +91,7 @@ void free_list_contents_kvp(list *l)
     }
 }
 
-void **list_to_array(list *l)
+void **list_to_array(dlist *l)
 {
     void** a = (void**)calloc(l->size, sizeof(void*));
     int count = 0;

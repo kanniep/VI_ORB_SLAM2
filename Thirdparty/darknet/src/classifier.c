@@ -57,7 +57,7 @@ void train_classifier(char *datacfg, char *cfgfile, char *weightfile, int *gpus,
     int imgs = net.batch * net.subdivisions * ngpus;
 
     printf("Learning Rate: %g, Momentum: %g, Decay: %g\n", net.learning_rate, net.momentum, net.decay);
-    list *options = read_data_cfg(datacfg);
+    dlist *options = read_data_cfg(datacfg);
 
     char *backup_directory = option_find_str(options, "backup", "/backup/");
     char *label_list = option_find_str(options, "labels", "data/labels.list");
@@ -65,7 +65,7 @@ void train_classifier(char *datacfg, char *cfgfile, char *weightfile, int *gpus,
     int classes = option_find_int(options, "classes", 2);
 
     char **labels = get_labels(label_list);
-    list *plist = get_paths(train_list);
+    dlist *plist = get_paths(train_list);
     char **paths = (char **)list_to_array(plist);
     printf("%d\n", plist->size);
     int train_images_num = plist->size;
@@ -328,7 +328,7 @@ void validate_classifier_crop(char *datacfg, char *filename, char *weightfile)
     }
     srand(time(0));
 
-    list *options = read_data_cfg(datacfg);
+    dlist *options = read_data_cfg(datacfg);
 
     char *label_list = option_find_str(options, "labels", "data/labels.list");
     char *valid_list = option_find_str(options, "valid", "data/train.list");
@@ -337,7 +337,7 @@ void validate_classifier_crop(char *datacfg, char *filename, char *weightfile)
     if (topk > classes) topk = classes;
 
     char **labels = get_labels(label_list);
-    list *plist = get_paths(valid_list);
+    dlist *plist = get_paths(valid_list);
 
     char **paths = (char **)list_to_array(plist);
     int m = plist->size;
@@ -397,7 +397,7 @@ void validate_classifier_10(char *datacfg, char *filename, char *weightfile)
     }
     srand(time(0));
 
-    list *options = read_data_cfg(datacfg);
+    dlist *options = read_data_cfg(datacfg);
 
     char *label_list = option_find_str(options, "labels", "data/labels.list");
     char *valid_list = option_find_str(options, "valid", "data/train.list");
