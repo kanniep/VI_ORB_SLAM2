@@ -163,14 +163,13 @@ void Frame::RemoveNonCoco(const cv::Mat &imGray)
 	network_predict_image(yolo_net, im);
 	printf("Predicted in %lf milli-seconds.\n", ((double)get_time_point() - time) / 1000);
 
-	int nboxes = 0;
-	detection *dets = get_network_boxes(yolo_net, im.w, im.h, 0.95, 0.95, 0, 1, &nboxes, letterbox);
-	if (nms) do_nms_sort(dets, nboxes, l.classes, nms);
+	detection *mvDets = get_network_boxes(yolo_net, im.w, im.h, 0.95, 0.95, 0, 1, &nboxes, letterbox);
+	if (nms) do_nms_sort(mvDets, nboxes, l.classes, nms);
 	free_image(im);
 	vector<bool> goodKeyIndex;
 	for (int i=0; i<N; i++) goodKeyIndex.push_back(false);
 	for (int i=0; i<nboxes; i++){
-		box curBox = dets[i].bbox;
+		box curBox = mvDets[i].bbox;
 		float minX = curBox.x - (curBox.w/2);
 		float minY = curBox.y - (curBox.h/2);
 		float maxX = curBox.x + (curBox.w/2);

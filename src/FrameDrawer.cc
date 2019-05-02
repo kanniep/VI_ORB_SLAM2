@@ -119,6 +119,17 @@ cv::Mat FrameDrawer::DrawFrame()
                 }
             }
         }
+        for(int i=0; i<currentNboxes; i++) {
+            box curBox = mvCurrentDets[i].bbox;
+            float minX = curBox.x - (curBox.w/2);
+            float minY = curBox.y - (curBox.h/2);
+            float maxX = curBox.x + (curBox.w/2);
+            float maxY = curBox.y + (curBox.h/2);
+            cv::Point2f pt1, pt2;
+            pt1.x = minX; pt1.y = minY;
+            pt2.x = maxX; pt2.y = maxY;
+            cv::rectangle(im,pt1,pt2,cv::Scalar(255,0,0));
+        }
     }
 
     cv::Mat imWithInfo;
@@ -177,6 +188,10 @@ void FrameDrawer::Update(Tracking *pTracker)
     mvbVO = vector<bool>(N,false);
     mvbMap = vector<bool>(N,false);
     mbOnlyTracking = pTracker->mbOnlyTracking;
+
+    // YOLO3
+    mvCurrentDets = pTracker->mvDets;
+    currentNboxes = pTracker->nboxes;
 
 
     if(pTracker->mLastProcessedState==Tracking::NOT_INITIALIZED)

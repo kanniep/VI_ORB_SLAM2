@@ -30,6 +30,8 @@
 
 #include<mutex>
 
+#include "Thirdparty/darknet/include/darknet.h"
+
 
 namespace ORB_SLAM2
 {
@@ -68,6 +70,10 @@ protected:
     Map* mpMap;
 
     std::mutex mMutex;
+
+    // YOLO3
+    detection *mvCurrentDets;
+    int currentNboxes = 0;
 };
 
 } //namespace ORB_SLAM
