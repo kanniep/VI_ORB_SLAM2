@@ -21,7 +21,7 @@
 #include "Frame.h"
 #include "Converter.h"
 #include "ORBmatcher.h"
-#include "Thirdparty/darknet/src/detector.c"
+#include "Thirdparty/darknet/src/detector.h"
 #include <thread>
 
 namespace ORB_SLAM2
@@ -32,9 +32,9 @@ bool Frame::mbInitialComputations = true;
 float Frame::cx, Frame::cy, Frame::fx, Frame::fy, Frame::invfx, Frame::invfy;
 float Frame::mnMinX, Frame::mnMinY, Frame::mnMaxX, Frame::mnMaxY;
 float Frame::mfGridElementWidthInv, Frame::mfGridElementHeightInv;
-char *cfgfile = "cfg/palm-tiny.cfg";
-char *datacfg = "cfg/palm.data";
-char *weightfile = "cfg/palm-tiny_13300.weights";
+char *cfgfile = "/home/nvidia/workspace/yolo3-viorb-slam2/cfg/palm-tiny.cfg";
+char *datacfg = "/home/nvidia/workspace/yolo3-viorb-slam2/cfg/palm.data";
+char *weightfile = "/home/nvidia/workspace/yolo3-viorb-slam2/cfg/palm-tiny_13300.weights";
 //network Frame::yolo_net = parse_network_cfg_custom(cfgfile, 1, 1); // set batch=11
 network *Frame::yolo_net = load_network(cfgfile, weightfile, 0);
 
@@ -146,7 +146,7 @@ void Frame::SetNavState(const NavState& ns)
 
 void Frame::RemoveNonCoco(const cv::Mat &imGray)
 {
-    srand(2222222);
+    // srand(2222222);
 
     float nms = .45;    // 0.4F
 	cv::Mat imNew;
@@ -157,34 +157,37 @@ void Frame::RemoveNonCoco(const cv::Mat &imGray)
 	int letterbox = 0;
 	layer l = yolo_net->layers[yolo_net->n - 1];
 
-	float *X = im.data;
+	//float *X = im.data;
 
 	double time = get_time_point();
 	network_predict_image(yolo_net, im);
 	printf("Predicted in %lf milli-seconds.\n", ((double)get_time_point() - time) / 1000);
 
-	detection *mvDets = get_network_boxes(yolo_net, im.w, im.h, 0.95, 0.95, 0, 1, &nboxes, letterbox);
+	detection *mvDets = get_network_boxes(yolo_net, im.w, im.h, 0.8, 0.5, 0, 1, &nboxes, letterbox);
 	if (nms) do_nms_sort(mvDets, nboxes, l.classes, nms);
 	free_image(im);
-	vector<bool> goodKeyIndex;
-	for (int i=0; i<N; i++) goodKeyIndex.push_back(false);
-	for (int i=0; i<nboxes; i++){
-		box curBox = mvDets[i].bbox;
-		float minX = curBox.x - (curBox.w/2);
-		float minY = curBox.y - (curBox.h/2);
-		float maxX = curBox.x + (curBox.w/2);
-		float maxY = curBox.y + (curBox.h/2);
-		for (int j=N-1; j>=0; j--) {
-			cv::KeyPoint curKey = mvKeys[j];
-			if ((curKey.pt.x >= minX || curKey.pt.x <= maxX) &&
-			(curKey.pt.y >= minY || curKey.pt.y <= maxY)) goodKeyIndex[j] = true;
-		}
-	}
+	//vector<bool> goodKeyIndex;
+	//for (int i=0; i<N; i++) goodKeyIndex.push_back(false);
+	//for (int i=0; i<nboxes; i++){
+	//	box curBox = mvDets[i].bbox;
+	//	float minX = curBox.x - (curBox.w/2);
+	//	float minY = curBox.y - (curBox.h/2);
+	//	float maxX = curBox.x + (curBox.w/2);
+	//	float maxY = curBox.y + (curBox.h/2);
+	//	for (int j=N-1; j>=0; j--) {
+	//		cv::KeyPoint curKey = mvKeys[j];
+	//		if ((curKey.pt.x >= minX || curKey.pt.x <= maxX) &&
+	//		(curKey.pt.y >= minY || curKey.pt.y <= maxY)) goodKeyIndex[j] = true;
+	//	}
+	//}
 	//for (int i=N-1; i>=0; i--) {
 	//	if (!goodKeyIndex[i]) mvKeys.erase(mvKeys.begin()+i);
 	//}
-	cout << N << " " << mvKeys.size() << endl;
+	//cout << "nboxes" << nboxes << endl;
 	//N = mvKeys.size();
+	for (int i=0; i<nboxes; i++) {
+		bBoxes.push_back(mvDets[i].bbox);
+	}
 }
 
 
@@ -211,7 +214,7 @@ Frame::Frame(const cv::Mat &imGray, const double &timeStamp, const std::vector<I
 
     // ORB extraction
     ExtractORB(0, imGray);
-    if (pLastKF != NULL) RemoveNonCoco(imGray);
+    // if (pLastKF != NULL) RemoveNonCoco(imGray);
 
     N = mvKeys.size();
 
@@ -255,6 +258,7 @@ Frame::Frame(const cv::Mat &imLeft, const cv::Mat &imRight, const double &timeSt
     : mpORBvocabulary(voc), mpORBextractorLeft(extractorLeft), mpORBextractorRight(extractorRight), mTimeStamp(timeStamp), mK(K.clone()), mDistCoef(distCoef.clone()), mbf(bf), mThDepth(thDepth),
       mpReferenceKF(static_cast<KeyFrame*>(NULL))
 {
+    cuda_set_device(0);
     // Copy IMU data
     mvIMUDataSinceLastFrame = vimu;
 

@@ -39,6 +39,6 @@ lib/
 .tags_sorted_by_file
 cmake_modules/
 cmake-build-debug/
-
-
+tmp_result/
+*weights
 

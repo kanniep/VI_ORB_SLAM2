@@ -30,8 +30,13 @@ echo "Configuring and building Thirdparty/g2o ..."
 
 echo "Configuring and building ORB_SLAM2 ..."
 
-rm -rf build
-mkdir build
+#rm -rf build
+#mkdir build
 cd build
+cmake .. -DCMAKE_BUILD_TYPE=Release
+make -j4
+
+echo "Configuring and building ROS_ORB_VIO ..."
+cd ../Examples/ROS/ORB_VIO/build
 cmake .. -DCMAKE_BUILD_TYPE=Release
 make -j4

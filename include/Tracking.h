@@ -38,15 +38,6 @@
 #include "MapDrawer.h"
 #include "System.h"
 
-#include "Thirdparty/darknet/include/darknet.h"
-#include "Thirdparty/darknet/src/network.h"
-#include "Thirdparty/darknet/src/region_layer.h"
-#include "Thirdparty/darknet/src/cost_layer.h"
-#include "Thirdparty/darknet/src/utils.h"
-#include "Thirdparty/darknet/src/parser.h"
-#include "Thirdparty/darknet/src/box.h"
-#include "Thirdparty/darknet/src/option_list.h"
-
 #ifndef __COMPAR_FN_T
 #define __COMPAR_FN_T
 typedef int (*__compar_fn_t)(const void*, const void*);

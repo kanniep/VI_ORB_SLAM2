@@ -72,8 +72,7 @@ protected:
     std::mutex mMutex;
 
     // YOLO3
-    detection *mvCurrentDets;
-    int currentNboxes = 0;
+    std::vector<box> curBBoxes;
 };
 
 } //namespace ORB_SLAM

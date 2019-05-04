@@ -114,9 +114,9 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/Examples/Monocular)
 #Examples/Monocular/mono_euroc_VI.cc)
 #target_link_libraries(mono_euroc_VI ${PROJECT_NAME})
 
-add_executable(mono_coconut_VI
-        Examples/Monocular/mono_coconut_VI.cc)
-target_link_libraries(mono_coconut_VI ${PROJECT_NAME})
+#add_executable(mono_coconut_VI
+#        Examples/Monocular/mono_coconut_VI.cc)
+#target_link_libraries(mono_coconut_VI ${PROJECT_NAME})
 
 ## Build tools
 #set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/Vocabulary)

@@ -183,6 +183,7 @@ public:
 
     // YOLO3
     detection *mvDets;
+    std::vector<box> bBoxes;
     int nboxes = 0;
 
     // Corresponding stereo coordinate and depth for each keypoint.

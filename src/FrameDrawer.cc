@@ -119,16 +119,22 @@ cv::Mat FrameDrawer::DrawFrame()
                 }
             }
         }
-        for(int i=0; i<currentNboxes; i++) {
-            box curBox = mvCurrentDets[i].bbox;
-            float minX = curBox.x - (curBox.w/2);
-            float minY = curBox.y - (curBox.h/2);
-            float maxX = curBox.x + (curBox.w/2);
-            float maxY = curBox.y + (curBox.h/2);
+        for(unsigned int i=0; i<curBBoxes.size(); i++) {
+            box curBox = curBBoxes[i];
+	    int W = im.size().width;
+	    int H = im.size().height;
+            float minX = (curBox.x - (curBox.w/2)) * W;
+            float minY = (curBox.y - (curBox.h/2)) * H;
+            float maxX = (curBox.x + (curBox.w/2)) * W;
+            float maxY = (curBox.y + (curBox.h/2)) * H;
+	    if (minX < 0) minX = 0;
+	    if (minY < 0) minY = 0;
+	    if (maxX < W - 1) maxX = W - 1;
+	    if (maxY < H - 1) maxY = H - 1;
             cv::Point2f pt1, pt2;
             pt1.x = minX; pt1.y = minY;
             pt2.x = maxX; pt2.y = maxY;
-            cv::rectangle(im,pt1,pt2,cv::Scalar(255,0,0));
+            cv::rectangle(im,pt1,pt2,cv::Scalar(0,0,255));
         }
     }
 
@@ -169,6 +175,8 @@ void FrameDrawer::DrawTextInfo(cv::Mat &im, int nState, cv::Mat &imText)
 
     s << " | Time: " << mCurTime - mStartTime;
 
+    s << " | nBoxes: " << curBBoxes.size();
+
     int baseline=0;
     cv::Size textSize = cv::getTextSize(s.str(),cv::FONT_HERSHEY_PLAIN,1,1,&baseline);
 
@@ -190,9 +198,7 @@ void FrameDrawer::Update(Tracking *pTracker)
     mbOnlyTracking = pTracker->mbOnlyTracking;
 
     // YOLO3
-    mvCurrentDets = pTracker->mvDets;
-    currentNboxes = pTracker->nboxes;
-
+    curBBoxes = pTracker->mCurrentFrame.bBoxes;
 
     if(pTracker->mLastProcessedState==Tracking::NOT_INITIALIZED)
     {
