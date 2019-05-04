@@ -1,0 +1,4 @@
+<launch>
+ 	<node pkg="ORB_VIO" type="VIO" name="VIO"  args="/home/nvidia/workspace/yolo3-viorb-slam2/Vocabulary/ORBvoc.bin /home/nvidia/workspace/yolo3-viorb-slam2/cfg/mono_coconut_VI.yaml" cwd="node" output="screen">
+	</node>
+</launch>
