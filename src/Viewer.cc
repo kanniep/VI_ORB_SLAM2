@@ -91,6 +91,7 @@ void Viewer::Run()
 
     bool bFollow = true;
     bool bLocalizationMode = false;
+    VideoWriter video("outcpp.avi",CV_FOURCC('M','J','P','G'),30, Size(frame_width,frame_height));
 
     while(1)
     {
@@ -135,6 +136,7 @@ void Viewer::Run()
         pangolin::FinishFrame();
 
         cv::Mat im = mpFrameDrawer->DrawFrame();
+        video.write(im);
         cv::imshow("ORB-SLAM2: Current Frame",im);
         cv::waitKey(mT);
 
